@@ -1,0 +1,46 @@
+// ============================================================
+// Prisma schema – PostgreSQL models for Business & Loan
+// Prisma turns this file into a type-safe database client.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Business profile of an MSME applicant
+model Business {
+  id             String   @id @default(uuid())
+  ownerName      String
+  pan            String
+  businessType   String
+  monthlyRevenue Float
+  createdAt      DateTime @default(now())
+
+  // One business can have many loan applications
+  loans Loan[]
+
+  @@index([pan])
+  @@index([ownerName])
+  @@map("businesses")
+}
+
+// Loan application linked to a business
+model Loan {
+  id         String   @id @default(uuid())
+  businessId String
+  loanAmount Float
+  tenure     Int
+  purpose    String
+  createdAt  DateTime @default(now())
+
+  // Relation back to the parent business
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@map("loans")
+}
