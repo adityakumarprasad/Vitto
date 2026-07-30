@@ -1,0 +1,39 @@
+/* ============================================================
+   index.css – Global styles + Tailwind layers
+   Atmospheric gradient background (not flat single color)
+   ============================================================ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply text-ink-900 dark:text-ink-50;
+    /* Soft teal-to-sand atmospheric background */
+    background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(47, 143, 114, 0.18), transparent 55%),
+      radial-gradient(900px 500px at 90% 0%, rgba(214, 208, 196, 0.55), transparent 50%),
+      linear-gradient(165deg, #f6f5f2 0%, #eef4f1 45%, #e8ebe4 100%);
+    min-height: 100vh;
+  }
+
+  .dark body,
+  html.dark body {
+    background:
+      radial-gradient(1000px 500px at 15% -5%, rgba(47, 143, 114, 0.22), transparent 55%),
+      radial-gradient(800px 400px at 95% 10%, rgba(58, 72, 66, 0.5), transparent 45%),
+      linear-gradient(165deg, #121411 0%, #1a1f1c 50%, #141816 100%);
+  }
+}
+
+@layer components {
+  /* Shared focus ring for form controls */
+  .field-focus {
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-400/60 focus:border-brand-500;
+  }
+}
