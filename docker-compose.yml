@@ -1,0 +1,77 @@
+# ============================================================
+# docker-compose.yml – Postgres + Mongo + Backend + Frontend
+# Run with: docker compose up --build
+# ============================================================
+
+services:
+  # ---------- PostgreSQL (Prisma / Business & Loan) ----------
+  postgres:
+    image: postgres:16-alpine
+    container_name: msme-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: msme
+      POSTGRES_PASSWORD: msme123
+      POSTGRES_DB: msme_lending
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U msme -d msme_lending"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------- MongoDB (DecisionHistory audit trail) ----------
+  mongo:
+    image: mongo:7
+    container_name: msme-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------- Express API ----------
+  backend:
+    build: ./backend
+    container_name: msme-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      DATABASE_URL: postgresql://msme:msme123@postgres:5432/msme_lending?schema=public
+      MONGODB_URI: mongodb://mongo:27017/msme_lending
+      CORS_ORIGIN: http://localhost:5173
+      DECISION_DELAY_MS: 3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+
+  # ---------- React frontend (nginx) ----------
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        # Same-origin /api — nginx proxies to the backend container
+        VITE_API_URL: /api
+    container_name: msme-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  mongo_data:
