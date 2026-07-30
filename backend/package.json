@@ -1,0 +1,30 @@
+{
+  "name": "msme-lending-backend",
+  "version": "1.0.0",
+  "description": "MSME Lending Decision System - Express API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node scripts/seed.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:push": "prisma db push"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "express-validator": "^7.2.0",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.8.0",
+    "morgan": "^1.10.0",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
