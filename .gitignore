@@ -1,0 +1,58 @@
+# ============================================================
+# MSME Lending Decision System - Git Ignore
+# ============================================================
+# This file tells Git which files and folders to NEVER track.
+# Keeping secrets, build output, and dependencies out of Git
+# keeps the repo clean and secure.
+# ============================================================
+
+# ---------- Environment / Secrets ----------
+# Never commit real API keys or database passwords
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+
+# ---------- Node.js ----------
+# Dependencies are re-installed with npm install
+node_modules/
+**/node_modules/
+
+# ---------- Logs ----------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---------- Build / Dist output ----------
+dist/
+build/
+**/dist/
+**/build/
+
+# ---------- Prisma ----------
+# Generated Prisma client lives in node_modules; keep local DB dumps out
+*.db
+*.db-journal
+
+# ---------- OS junk files ----------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---------- IDE / Editor ----------
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+
+# ---------- Coverage / Test ----------
+coverage/
+.nyc_output/
+
+# ---------- Docker volumes (local data) ----------
+postgres_data/
+mongo_data/
